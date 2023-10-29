@@ -25,5 +25,5 @@ jobs:
 
     - name: Build the docker image
       run: |
-        docker build . --tag ghcr.io/suchmememanyskill/discord-mail-forwarder:latest
-        docker push ghcr.io/suchmememanyskill/discord-mail-forwarder:latest
+        docker build . --tag ghcr.io/suchmememanyskill/discord-aliexpress-tracker:latest
+        docker push ghcr.io/suchmememanyskill/discord-aliexpress-tracker:latest

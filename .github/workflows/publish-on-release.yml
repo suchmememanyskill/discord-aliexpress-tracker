@@ -23,5 +23,5 @@ jobs:
 
     - name: Build the docker image
       run: |
-        docker build . --tag ghcr.io/suchmememanyskill/discord-mail-forwarder:$GITHUB_REF_NAME
-        docker push ghcr.io/suchmememanyskill/discord-mail-forwarder:$GITHUB_REF_NAME
+        docker build . --tag ghcr.io/suchmememanyskill/discord-aliexpress-tracker:$GITHUB_REF_NAME
+        docker push ghcr.io/suchmememanyskill/discord-aliexpress-tracker:$GITHUB_REF_NAME
