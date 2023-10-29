@@ -104,6 +104,10 @@ async def ali_add(interaction: discord.Interaction, code : str, name : str, user
     name = name.strip()
     user_id = str((user or interaction.user).id)
 
+    if len(code) != 13:
+        await interaction.response.send_message(f"Tracking code '{code}' doesn't look to be an AliExpress tracking code", ephemeral=True)
+        return
+
     if (get_tracking_code_data(user_id, code) is not None):
         await interaction.response.send_message(f"Tracking code '{code}' has already been added", ephemeral=True)
         return
@@ -147,9 +151,13 @@ async def ali_remove(interaction: discord.Interaction, code : str):
 
 async def fetch_tracking_data():
     while True:
-        logger.info("Fetching tracking data")
         try:
-            e = extract.extract_tracking_data(get_all_tracking_codes())
+            all_codes = get_all_tracking_codes()
+            if len(all_codes) <= 0:
+                raise Exception("No tracking codes to fetch!")
+
+            logger.info("Fetching tracking data")
+            e = extract.extract_tracking_data(all_codes)
             p = extract.parse_tracking_data(e)
 
             def find(code : str):
@@ -191,14 +199,18 @@ async def fetch_tracking_data():
                 if user is None:
                     user = await bot.fetch_user(int(user_id))
                 
-                user_dm_channel = user.dm_channel
-                if user_dm_channel is None:
-                    user_dm_channel = await user.create_dm()
-                
-                await user_dm_channel.send(embeds=embeds)
+                try:
+                    user_dm_channel = user.dm_channel
+                    if user_dm_channel is None:
+                        user_dm_channel = await user.create_dm()
+
+                    await user_dm_channel.send(embeds=embeds)
+                except Exception as e:
+                    logger.warning(f"Failed sending tracking data to user {user.name}: {str(e)}")
+
+            logger.info(f"Processed {len(p)} tracking codes")
 
         except Exception as e:
-            print(traceback.format_exc())
             logger.error(f"Failed fetching tracking data: {str(e)}")
 
         await asyncio.sleep(60 * 60 * 2) # 2 hours
