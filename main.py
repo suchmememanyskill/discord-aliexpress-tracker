@@ -102,7 +102,13 @@ load_tracking_codes()
 async def ali_add(interaction: discord.Interaction, code : str, name : str, user : discord.User = None):
     code = code.strip()
     name = name.strip()
-    add_tracking_code(str((user or interaction.user).id), code, name)
+    user_id = str((user or interaction.user).id)
+
+    if (get_tracking_code_data(user_id, code) is not None):
+        await interaction.response.send_message(f"Tracking code '{code}' has already been added", ephemeral=True)
+        return
+
+    add_tracking_code(user_id, code, name)
     message = f"Added tracking code '{code}' as {name}"
     if (user is not None):
         message += "\nThe user you added a tracking code to is not you. You will not receive updates for this code."
