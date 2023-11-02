@@ -104,7 +104,7 @@ async def ali_add(interaction: discord.Interaction, code : str, name : str, user
     name = name.strip()
     user_id = str((user or interaction.user).id)
 
-    if len(code) != 13:
+    if len(code) not in [13, 16]:
         await interaction.response.send_message(f"Tracking code '{code}' doesn't look to be an AliExpress tracking code", ephemeral=True)
         return
 
