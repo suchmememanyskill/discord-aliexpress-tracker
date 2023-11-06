@@ -183,7 +183,7 @@ async def fetch_tracking_data():
                     embed = discord.Embed(title=data['name'], description=str(tracking))
                     embeds.append(embed)
 
-                    if (tracking.get_last_status() == "Delivered"):
+                    if (tracking.status == "Delivered" or tracking.get_last_status() == "Delivered" or tracking.get_last_status() == "Package delivered"):
                         removals.append(code)
                         embed.set_footer(text="Package seems to be delivered, removing!")
 
